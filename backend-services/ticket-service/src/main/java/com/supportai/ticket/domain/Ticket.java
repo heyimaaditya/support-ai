@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.supportai.common.entity.BaseEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tickets")
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@EqualsAndHashCode(callSuper = true)
 public class Ticket extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +60,8 @@ public class Ticket extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String aiResponse;
     
-    private Double aiConfidence;
+   @Column(name = "ai_confidence", precision = 3, scale = 2)
+private BigDecimal aiConfidence;
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

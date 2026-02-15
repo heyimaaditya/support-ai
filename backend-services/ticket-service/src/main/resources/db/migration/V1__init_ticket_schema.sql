@@ -9,14 +9,14 @@ CREATE TABLE tickets (
     category VARCHAR(100),
     sentiment VARCHAR(20), 
 
-    asignee_id BIGINT,
+    assignee_id BIGINT,
     requester_id BIGINT NOT NULL,
     requester_email VARCHAR(255) NOT NULL,
     tenant_id VARCHAR(255) NOT NULL,
 
     sla_breach_at TIMESTAMP,
     resolved_at TIMESTAMP,
-    created_at TIMESTAMP,
+    closed_at TIMESTAMP,
 
     ai_processed BOOLEAN DEFAULT FALSE,
     ai_response TEXT,
@@ -28,8 +28,7 @@ CREATE TABLE tickets (
     updated_by VARCHAR(255),
     version BIGINT DEFAULT 0
 );
-
-CREATE TABLE ticket_comments(
+CREATE TABLE IF NOT EXISTS ticket_comments (
     id BIGSERIAL PRIMARY KEY,
     ticket_id BIGINT NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
     user_id BIGINT NOT NULL,
@@ -40,14 +39,13 @@ CREATE TABLE ticket_comments(
     created_by VARCHAR(255)
 );
 
-CREATE TABLE ticket_attachments (
+CREATE TABLE IF NOT EXISTS ticket_attachments (
     id BIGSERIAL PRIMARY KEY,
     ticket_id BIGINT NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
     file_name VARCHAR(255) NOT NULL,
     file_url TEXT NOT NULL,
     file_size BIGINT,
-    content_type VARCHAR(100),
-    
+    content_type VARCHAR(100),  
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(255)
 );
