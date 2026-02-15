@@ -8,3 +8,6 @@ python-dotenv
 pydantic
 httpx
 redis
+pinecone
+sentence-transformers
+langchain-google-genai
