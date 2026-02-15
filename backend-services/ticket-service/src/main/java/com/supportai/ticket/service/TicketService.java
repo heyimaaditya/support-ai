@@ -19,7 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.supportai.ticket.event.KafkaEventPublisher;
+import com.supportai.ticket.event.TicketCreatedEvent;
 import java.time.LocalDateTime;
 
 @Service
@@ -30,6 +31,8 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
     private final TicketCommentRepository commentRepository;
+    private final KafkaEventPublisher eventPublisher;
+
 
     @Transactional
     public TicketDTO createTicket(CreateTicketRequest request, String tenantId) {
@@ -38,7 +41,17 @@ public class TicketService {
         ticket.setTenantId(tenantId);
         ticket.setSlaBreachAt(calculateSla(ticket.getPriority()));
         Ticket savedTicket = ticketRepository.save(ticket);
-        return ticketMapper.toDTO(savedTicket);
+        TicketCreatedEvent event = new TicketCreatedEvent();
+    event.setTicketId(savedTicket.getId());
+    event.setTenantId(tenantId);
+    event.setTitle(savedTicket.getTitle());
+    event.setRequesterEmail(savedTicket.getRequesterEmail());
+    event.setPriority(savedTicket.getPriority().name());
+    
+    eventPublisher.publishTicketCreated(event);
+    
+    return ticketMapper.toDTO(savedTicket);
+      
     }
 
     public Page<TicketDTO> listTickets(TicketFilter filter, String tenantId, Pageable pageable) {
