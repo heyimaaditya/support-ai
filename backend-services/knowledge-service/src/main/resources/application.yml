@@ -1,0 +1,15 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: knowledge-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/supportai
+    username: supportai
+    password: supportai123
+  elasticsearch:
+    uris: http://localhost:9200
+  flyway:
+    enabled: true
+    locations: classpath:db/migration

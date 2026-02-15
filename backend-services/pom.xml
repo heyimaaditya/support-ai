@@ -27,7 +27,8 @@
     <modules>
         <module>common-lib</module>
         <module>auth-service</module>
-        <!-- <module>ticket-service</module> -->
+        <module>ticket-service</module>
+        <module>knowledge-service</module>
     </modules>
 
     <dependencyManagement>
